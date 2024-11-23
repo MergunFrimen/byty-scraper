@@ -1,6 +1,7 @@
 import { config } from "./config";
 import { logger } from "./logger";
 import { Embed, Posting, WebhookMessage } from "./types";
+import fetch from "node-fetch";
 
 export async function sendToDiscord(postings: Posting): Promise<void> {
   try {
