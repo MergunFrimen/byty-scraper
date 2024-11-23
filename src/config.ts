@@ -13,5 +13,5 @@ export const config: Config = {
   timeoutMs: 5000,
   discordWebhook: process.env.DISCORD_WEBHOOK_URL,
   maxMessageLength: 2000,
-  checkInterval: "*/5 * * * *", // every hour
+  checkInterval: "*/1 * * * *", // every hour
 };
