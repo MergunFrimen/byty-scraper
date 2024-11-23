@@ -1,8 +1,7 @@
+import fetch from "node-fetch";
 import { client } from "./client";
-import { config } from "./config";
 import { logger } from "./logger";
 import { Website, ApiRequest } from "./types";
-import fetch from "node-fetch";
 
 export async function fetchWebsite(website: Website): Promise<any> {
   let apiRequest: ApiRequest | undefined;
@@ -13,7 +12,7 @@ export async function fetchWebsite(website: Website): Promise<any> {
   if (website === "ulovdomov") {
     apiRequest = client.ulovdomov;
   }
-    
+
   if (!apiRequest) {
     logger.error({
       message: "Error setting up API request",
