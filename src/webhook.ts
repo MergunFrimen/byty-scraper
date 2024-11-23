@@ -1,7 +1,7 @@
 import { config } from "./config";
 import { logger } from "./logger";
 import { Embed, Posting, WebhookMessage } from "./types";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 
 export async function sendToDiscord(postings: Posting): Promise<void> {
   try {
@@ -18,7 +18,7 @@ export async function sendToDiscord(postings: Posting): Promise<void> {
       embeds: [embed],
     };
 
-    const response = await fetch(config.discordWebhook, {
+    const response: Response = await fetch(config.discordWebhook, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
