@@ -1,23 +1,22 @@
 import cron from "node-cron";
+import { BezrealityClient } from "./clients/bezrealitky-client";
+import { UlovdomovClient } from "./clients/ulovdomov-client";
 import { config } from "./config";
 import { logger } from "./logger";
-import { sendToDiscord } from "./webhook";
-import { processData } from "./process-data";
-import { fetchWebsite } from "./fetcher";
+import { processBezrealitkyData, processUlovdomovData } from "./process-data";
+import { Posting } from "./types";
 import {
   combineAndSortPostings,
   findNewPostings,
   readJsonFile,
   writeJsonFile,
 } from "./utils";
-import { Posting } from "./types";
+import { alertAboutStopping, notifyAboutNewPosting } from "./webhook";
 
-async function ulovdomov(notifyByDiscord: boolean = false) {
-  const ulovdomovData = await fetchWebsite("ulovdomov");
-  const ulovdomovCurrentPostings: Posting[] = processData(
-    "ulovdomov",
-    ulovdomovData
-  );
+async function ulovdomovExecute(notifyByDiscord: boolean = false) {
+  const ulovdomovData = await UlovdomovClient.getPostings();
+  const ulovdomovCurrentPostings: Posting[] =
+    processUlovdomovData(ulovdomovData);
   const ulovdomovSeenPostings: Posting[] = await readJsonFile(
     "./data/ulovdomov-seen.json"
   );
@@ -34,19 +33,48 @@ async function ulovdomov(notifyByDiscord: boolean = false) {
 
   if (notifyByDiscord) {
     for (const posting of ulovdomovNewPostings) {
-      await sendToDiscord(posting);
+      await notifyAboutNewPosting(posting);
+    }
+  }
+}
+
+async function bezrealitkyExecute(notifyByDiscord: boolean = false) {
+  const bezrealitkyData = await BezrealityClient.getPostings();
+  const bezrealitkyCurrentPostings: Posting[] =
+    processBezrealitkyData(bezrealitkyData);
+  const bezrealitkySeenPostings: Posting[] = await readJsonFile(
+    "./data/bezrealitky-seen.json"
+  );
+  const bezrealitkyNewPostings = findNewPostings(
+    bezrealitkySeenPostings,
+    bezrealitkyCurrentPostings
+  );
+  const bezrealitkyAllPostings = combineAndSortPostings(
+    bezrealitkySeenPostings,
+    bezrealitkyNewPostings
+  );
+
+  writeJsonFile("./data/bezrealitky-seen.json", bezrealitkyAllPostings);
+
+  if (notifyByDiscord) {
+    for (const posting of bezrealitkyNewPostings) {
+      await notifyAboutNewPosting(posting);
     }
   }
 }
 
 async function main() {
-  await ulovdomov(true);
+  await ulovdomovExecute(true);
+  // await bezrealitkyExecute(true);
 }
 
 // Initial fetch
-ulovdomov(false).then(() => {
-  logger.info("Initial fetch completed");
+ulovdomovExecute(false).then(() => {
+  logger.info("Initial ulovdomov fetch completed");
 });
+// bezrealitkyExecute(false).then(() => {
+//   logger.info("Initial bezrealitky fetch completed");
+// });
 
 // Schedule task
 cron.schedule(config.checkInterval, async () => {
@@ -55,12 +83,36 @@ cron.schedule(config.checkInterval, async () => {
 });
 
 // Handle process termination
+process.on("exit", (code) => {
+  alertAboutStopping();
+  logger.info("exit", `Process exit with code: ${code}`);
+});
+
 process.on("SIGTERM", () => {
-  logger.info("Application shutting down");
+  alertAboutStopping();
+  logger.info("Application shutting down SIGTERM");
   process.exit(0);
 });
 
 process.on("SIGINT", () => {
-  logger.info("Application shutting down");
+  alertAboutStopping();
+  logger.info("Application shutting down SIGINT");
   process.exit(0);
+});
+
+// Handle unexpected errors
+process.on("uncaughtException", (error) => {
+  alertAboutStopping();
+  logger.error(
+    "uncaughtException",
+    `Error: ${error.message}\nStack: ${error.stack}`
+  );
+  process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (reason) => {
+  alertAboutStopping();
+  logger.error("unhandledRejection", `Reason: ${reason}`);
+  process.exit(1);
 });

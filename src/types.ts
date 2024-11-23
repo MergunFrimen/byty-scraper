@@ -1,16 +1,5 @@
-export type Website = "ulovdomov" | "bezrealitky";
-
-export interface ApiRequest {
-  url: string;
-  body: any;
-}
-
-export interface Client {
-  ulovdomov: ApiRequest;
-  bezrealitky: ApiRequest;
-}
-
 export interface Config {
+  alertOnStopping: boolean;
   timeoutMs: number;
   discordWebhook: string;
   maxMessageLength: number;
@@ -37,3 +26,38 @@ export interface Posting {
   id: string;
   url: string;
 }
+
+export type AdvertListVariables = {
+  limit: number;
+  offset: number;
+  order: "TIMEORDER_DESC";
+  locale: string;
+  offerType: string[];
+  estateType: string[];
+  disposition: string[];
+  regionOsmIds: string[];
+  location: string;
+  currency: string;
+  construction: any[];
+};
+
+export type AdvertListResponse = {
+  data: {
+    listAdverts: {
+      list: Array<{
+        id: string;
+        uri: string;
+        estateType: string;
+        offerType: string;
+        disposition: string;
+        // ... add other fields you need
+      }>;
+      totalCount: number;
+      __typename: string;
+    };
+    actionList: {
+      totalCount: number;
+      __typename: string;
+    };
+  };
+};

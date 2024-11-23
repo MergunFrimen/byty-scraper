@@ -3,18 +3,32 @@ import { config } from "./config";
 import { logger } from "./logger";
 import { Embed, Posting, WebhookMessage } from "./types";
 
-export async function sendToDiscord(postings: Posting): Promise<void> {
-  try {
-    const embed: Embed = {
-      title: "🏠 New posting",
-      description: postings.url.substring(0, config.maxMessageLength - 100),
-      url: postings.url.substring(0, config.maxMessageLength - 100),
-      color: 65280,
-      timestamp: new Date().toISOString(),
-    };
+export async function notifyAboutNewPosting(postings: Posting): Promise<void> {
+  const embed: Embed = {
+    title: "🏠 New posting",
+    description: postings.url.substring(0, config.maxMessageLength - 100),
+    url: postings.url.substring(0, config.maxMessageLength - 100),
+    color: Number("0x00ff00"),
+    timestamp: new Date().toISOString(),
+  };
+  sendToDiscord(embed);
+}
 
+export async function alertAboutStopping(): Promise<void> {
+  if (!config.alertOnStopping) return;
+
+  const embed: Embed = {
+    title: "🚨 Bot killed 💀",
+    color: Number("0xff0000"),
+    timestamp: new Date().toISOString(),
+  };
+  sendToDiscord(embed);
+}
+
+async function sendToDiscord(embed: Embed): Promise<void> {
+  try {
     const webhookMessage: WebhookMessage = {
-      username: "Website Monitor",
+      username: "Byty Bot",
       embeds: [embed],
     };
 

@@ -1,17 +1,6 @@
-import { Posting, Website } from "./types";
+import { Posting } from "./types";
 
-export function processData(website: Website, data: any) {
-  switch (website) {
-    case "bezrealitky":
-      return processBezrealitkyData(data);
-    case "ulovdomov":
-      return processUlovdomovData(data);
-    default:
-      throw new TypeError();
-  }
-}
-
-function processUlovdomovData(data: any) {
+export function processUlovdomovData(data: any) {
   const offers = data.data.offers;
   const postings: Posting[] = offers.map((offer: any): Posting => {
     return {
@@ -23,7 +12,7 @@ function processUlovdomovData(data: any) {
   return postings;
 }
 
-function processBezrealitkyData(data: any) {
+export function processBezrealitkyData(data: any) {
   const offers = data.data.listAdverts.list;
   const postings: Posting[] = offers.map((offer: any): Posting => {
     return {
