@@ -2,6 +2,7 @@ import { client } from "./client";
 import { config } from "./config";
 import { logger } from "./logger";
 import { Website, ApiRequest } from "./types";
+import fetch from "node-fetch";
 
 export async function fetchWebsite(website: Website): Promise<any> {
   let apiRequest: ApiRequest | undefined;
@@ -12,7 +13,7 @@ export async function fetchWebsite(website: Website): Promise<any> {
   if (website === "ulovdomov") {
     apiRequest = client.ulovdomov;
   }
-
+    
   if (!apiRequest) {
     logger.error({
       message: "Error setting up API request",
@@ -23,7 +24,7 @@ export async function fetchWebsite(website: Website): Promise<any> {
   try {
     logger.info(`Starting fetch for ${apiRequest.url}`);
 
-    const request = new Request(apiRequest.url, {
+    const response = await fetch(apiRequest.url, {
       method: "POST",
       headers: {
         "User-Agent": "curl/8.11.0",
@@ -31,8 +32,6 @@ export async function fetchWebsite(website: Website): Promise<any> {
       },
       body: apiRequest.body,
     });
-
-    const response = await fetch(request);
 
     if (!response.ok) {
       logger.error({
