@@ -5,7 +5,7 @@
     "build": "tsc",
     "start:dev": "npm run build && node dist/main.js",
     "start": "npx pm2 start ecosystem.config.js --env production",
-    "stop": "npx pm2 delete website-monitor",
+    "stop": "npx pm2 stop website-monitor",
     "repopack": "npx repomix --copy --output repomix-output.txt && rm -f repomix-output.txt"
   },
   "dependencies": {
