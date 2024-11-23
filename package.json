@@ -1,17 +1,12 @@
 {
   "name": "website-monitor",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "watch": "tsc -w",
-    "lint": "eslint . --ext .ts",
-    "clean": "rimraf dist"
+    "start": "npx pm2 start ecosystem.config.js --env production",
+    "repopack": "npx repomix --copy --output repomix-output.txt && rm -f repomix-output.txt"
   },
   "dependencies": {
-    "@types/node-cron": "^3.0.11",
-    "@types/node-fetch": "^2.6.12",
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
@@ -20,6 +15,8 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@types/node": "^22.9.3"
+    "@types/node": "^22.9.3",
+    "@types/node-cron": "^3.0.11",
+    "@types/node-fetch": "^2.6.12"
   }
 }
