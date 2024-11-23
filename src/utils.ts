@@ -77,14 +77,7 @@ export async function readJsonFile(
 
     return jsonData;
   } catch (error) {
-    if (error instanceof Error) {
-      // Enhance error message with the attempted file path
-      const errorMessage = `Error reading JSON file '${filePath}': ${error.message}`;
-      throw new Error(errorMessage);
-    }
-    throw new Error(
-      `An unknown error occurred while reading the JSON file '${filePath}'`
-    );
+    return [];
   }
 }
 export function findNewPostings(

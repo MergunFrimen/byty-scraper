@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import cron from "node-cron";
 import { config } from "./config";
 import { logger } from "./logger";
@@ -13,7 +12,7 @@ import {
 } from "./utils";
 import { Posting } from "./types";
 
-async function main() {
+async function ulovdomov(notifyByDiscord: boolean = false) {
   const ulovdomovData = await fetchWebsite("ulovdomov");
   const ulovdomovCurrentPostings: Posting[] = processData(
     "ulovdomov",
@@ -33,20 +32,26 @@ async function main() {
 
   writeJsonFile("./data/ulovdomov-seen.json", ulovdomovAllPostings);
 
-  for (const posting of ulovdomovNewPostings) {
-    await sendToDiscord(posting);
+  if (notifyByDiscord) {
+    for (const posting of ulovdomovNewPostings) {
+      await sendToDiscord(posting);
+    }
   }
 }
+
+async function main() {
+  await ulovdomov(true);
+}
+
+// Initial fetch
+ulovdomov(false).then(() => {
+  logger.info("Initial fetch completed");
+});
 
 // Schedule task
 cron.schedule(config.checkInterval, async () => {
   logger.info("Starting scheduled task");
   await main();
-});
-
-// Initial fetch
-main().then(() => {
-  logger.info("Initial fetch completed");
 });
 
 // Handle process termination

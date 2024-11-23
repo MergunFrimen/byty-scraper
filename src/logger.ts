@@ -17,11 +17,3 @@ export const logger = winston.createLogger({
     new winston.transports.Console(),
   ],
 });
-
-// logger.info("Starting application with config:", {
-//   ulovdomov: config.ulovdomov,
-//   bezrealitky: config.bezrealitky,
-//   timeoutMs: config.timeoutMs,
-//   maxMessageLength: config.maxMessageLength,
-//   checkInterval: config.checkInterval,
-// });
