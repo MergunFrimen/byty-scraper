@@ -99,3 +99,15 @@ export function combineAndSortPostings(
     return 0;
   });
 }
+
+export function createMapyCzUrl(latitude: number, longitude: number) {
+  const baseUrl = "https://mapy.cz/fnc/v1/showmap";
+  const url = new URL(baseUrl);
+
+  url.searchParams.set("mapset", "basic");
+  url.searchParams.set("center", `${longitude},${latitude}`);
+  url.searchParams.set("zoom", "14");
+  url.searchParams.set("marker", "true");
+
+  return url.toString();
+}

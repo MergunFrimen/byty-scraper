@@ -3,13 +3,19 @@ import { config } from "./config";
 import { logger } from "./logger";
 import { Embed, Posting, WebhookMessage } from "./types";
 
-export async function notifyAboutNewPosting(postings: Posting): Promise<void> {
+export async function notifyAboutNewPosting(posting: Posting): Promise<void> {
+  const description = [posting.postingUrl, posting.mapyczUrl];
+  const image = posting.imageUrl
+    ? {
+        url: posting.imageUrl,
+      }
+    : undefined;
   const embed: Embed = {
     title: "🏠 New posting",
-    description: postings.url.substring(0, config.maxMessageLength - 100),
-    url: postings.url.substring(0, config.maxMessageLength - 100),
+    description: description.join("\n\n"),
     color: Number("0x00ff00"),
     timestamp: new Date().toISOString(),
+    image: image,
   };
   sendToDiscord(embed);
 }

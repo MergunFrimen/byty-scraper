@@ -15,6 +15,13 @@ export interface Embed {
   footer?: {
     text: string;
   };
+  image?: EmbedImage;
+}
+
+export interface EmbedImage {
+  url: string;
+  height?: number;
+  width?: number;
 }
 
 export interface WebhookMessage {
@@ -24,7 +31,9 @@ export interface WebhookMessage {
 
 export interface Posting {
   id: string;
-  url: string;
+  postingUrl: string;
+  imageUrl?: string;
+  mapyczUrl?: string;
 }
 
 export type AdvertListVariables = {
