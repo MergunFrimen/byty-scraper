@@ -10,7 +10,7 @@ if (!process.env.DISCORD_WEBHOOK_URL) {
 }
 
 export const config: Config = {
-  alertOnStopping: false,
+  alertOnStopping: true,
   timeoutMs: 5000,
   discordWebhook: process.env.DISCORD_WEBHOOK_URL,
   maxMessageLength: 2000,
