@@ -83,26 +83,26 @@ cron.schedule(config.checkInterval, async () => {
 });
 
 // Handle process termination
-process.on("exit", (code) => {
-  alertAboutStopping();
+process.on("exit", async (code) => {
+  await alertAboutStopping();
   logger.info("exit", `Process exit with code: ${code}`);
 });
 
-process.on("SIGTERM", () => {
-  alertAboutStopping();
+process.on("SIGTERM", async () => {
+  await alertAboutStopping();
   logger.info("Application shutting down SIGTERM");
   process.exit(0);
 });
 
-process.on("SIGINT", () => {
-  alertAboutStopping();
+process.on("SIGINT", async () => {
+  await alertAboutStopping();
   logger.info("Application shutting down SIGINT");
   process.exit(0);
 });
 
 // Handle unexpected errors
-process.on("uncaughtException", (error) => {
-  alertAboutStopping();
+process.on("uncaughtException", async (error) => {
+  await alertAboutStopping();
   logger.error(
     "uncaughtException",
     `Error: ${error.message}\nStack: ${error.stack}`
@@ -111,8 +111,8 @@ process.on("uncaughtException", (error) => {
 });
 
 // Handle unhandled promise rejections
-process.on("unhandledRejection", (reason) => {
-  alertAboutStopping();
+process.on("unhandledRejection", async (reason) => {
+  await alertAboutStopping();
   logger.error("unhandledRejection", `Reason: ${reason}`);
   process.exit(1);
 });
