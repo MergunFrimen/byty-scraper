@@ -11,7 +11,7 @@ export class UlovdomovClient {
     },
     offerType: "rent",
     propertyType: "flat",
-    disposition: ["threePlusOne", "threePlusKk"],
+    disposition: ["threePlusOne", "threePlusKk", "twoPlusOne"],
   };
 
   static async getPostings(): Promise<any | undefined> {
