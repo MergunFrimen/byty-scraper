@@ -6,8 +6,9 @@ export function processUlovdomovData(data: any) {
   const postings: Posting[] = offers.map((offer: any): Posting => {
     const posting: Posting = {
       id: offer.id,
+      price: offer.rentalPrice.value,
       timestamp: getCurrentTimestamp(),
-      postingUrl: `https://www.ulovdomov.cz/inzerat/${offer.seo}/${offer.id}`,
+      postingUrl: offer.absoluteUrl,
       imageUrl: offer.photos[0]?.path ?? undefined,
       mapyczUrl: offer.geoCoordinates
         ? createMapyCzUrl(offer.geoCoordinates.lat, offer.geoCoordinates.lng)
@@ -24,6 +25,7 @@ export function processBezrealitkyData(data: any) {
   const postings: Posting[] = offers.map((offer: any): Posting => {
     return {
       id: offer.id,
+      price: 0,
       timestamp: getCurrentTimestamp(),
       postingUrl: `https://www.bezrealitky.cz/nemovitosti-byty-domy/${offer.id}`,
     };

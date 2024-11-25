@@ -2,9 +2,14 @@ import fetch, { Response } from "node-fetch";
 import { config } from "./config";
 import { logger } from "./logger";
 import { Embed, Posting, WebhookMessage } from "./types";
+import { formatCZK } from "./utils";
 
 export async function notifyAboutNewPosting(posting: Posting): Promise<void> {
-  const description = [posting.postingUrl, posting.mapyczUrl];
+  const description = [
+    `Price: ${formatCZK(posting.price)}`,
+    posting.postingUrl,
+    posting.mapyczUrl,
+  ];
   const image = posting.imageUrl
     ? {
         url: posting.imageUrl,

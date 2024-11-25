@@ -31,6 +31,7 @@ export interface WebhookMessage {
 
 export interface Posting {
   id: string;
+  price: number;
   postingUrl: string;
   timestamp: string;
   imageUrl?: string;
