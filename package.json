@@ -6,6 +6,7 @@
     "start:dev": "npm run build && node dist/main.js",
     "start": "npm run build && npx pm2 start ecosystem.config.js --env production",
     "stop": "npx pm2 stop website-monitor",
+    "setup": "npm run build && node dist/setup.js",
     "repopack": "npx repomix --copy --output repomix-output.txt && rm -f repomix-output.txt"
   },
   "dependencies": {
