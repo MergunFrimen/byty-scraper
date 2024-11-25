@@ -13,7 +13,7 @@ import {
 } from "./utils";
 import { alertAboutStopping, notifyAboutNewPosting } from "./webhook";
 
-async function ulovdomovExecute(notifyByDiscord: boolean = false) {
+export async function ulovdomovExecute(notifyByDiscord: boolean = false) {
   const ulovdomovData = await UlovdomovClient.getPostings();
   const ulovdomovCurrentPostings: Posting[] =
     processUlovdomovData(ulovdomovData);
@@ -29,7 +29,7 @@ async function ulovdomovExecute(notifyByDiscord: boolean = false) {
     ulovdomovNewPostings
   );
 
-  writeJsonFile("./data/ulovdomov-seen.json", ulovdomovAllPostings);
+  await writeJsonFile("./data/ulovdomov-seen.json", ulovdomovAllPostings);
 
   if (notifyByDiscord) {
     for (const posting of ulovdomovNewPostings) {
@@ -38,7 +38,7 @@ async function ulovdomovExecute(notifyByDiscord: boolean = false) {
   }
 }
 
-async function bezrealitkyExecute(notifyByDiscord: boolean = false) {
+export async function bezrealitkyExecute(notifyByDiscord: boolean = false) {
   const bezrealitkyData = await BezrealityClient.getPostings();
   const bezrealitkyCurrentPostings: Posting[] =
     processBezrealitkyData(bezrealitkyData);
@@ -54,7 +54,7 @@ async function bezrealitkyExecute(notifyByDiscord: boolean = false) {
     bezrealitkyNewPostings
   );
 
-  writeJsonFile("./data/bezrealitky-seen.json", bezrealitkyAllPostings);
+  await writeJsonFile("./data/bezrealitky-seen.json", bezrealitkyAllPostings);
 
   if (notifyByDiscord) {
     for (const posting of bezrealitkyNewPostings) {
@@ -67,14 +67,6 @@ async function main() {
   await ulovdomovExecute(true);
   // await bezrealitkyExecute(true);
 }
-
-// Initial fetch
-ulovdomovExecute(false).then(() => {
-  logger.info("Initial ulovdomov fetch completed");
-});
-// bezrealitkyExecute(false).then(() => {
-//   logger.info("Initial bezrealitky fetch completed");
-// });
 
 // Schedule task
 cron.schedule(config.checkInterval, async () => {

@@ -4,8 +4,15 @@ import { logger } from "../logger";
 export class UlovdomovClient {
   private static readonly _endpoint =
     "https://ud.api.ulovdomov.cz/v1/offer/find?page=1&perPage=2000&sorting=latest";
-  private static readonly _body =
-    '{"bounds":{"northEast":{"lat":49.294485,"lng":16.7278532},"southWest":{"lat":49.1096552,"lng":16.4280678}},"offerType":"rent","propertyType":"flat","disposition":["threePlusOne","threePlusKk"]}';
+  private static readonly _body = {
+    bounds: {
+      northEast: { lat: 49.294485, lng: 16.7278532 },
+      southWest: { lat: 49.1096552, lng: 16.4280678 },
+    },
+    offerType: "rent",
+    propertyType: "flat",
+    disposition: ["threePlusOne", "threePlusKk"],
+  };
 
   static async getPostings(): Promise<any | undefined> {
     try {
@@ -16,7 +23,7 @@ export class UlovdomovClient {
         headers: {
           "Content-Type": "application/json",
         },
-        body: this._body,
+        body: JSON.stringify(this._body),
       });
 
       if (!response.ok) {

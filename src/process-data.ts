@@ -1,11 +1,12 @@
 import { Posting } from "./types";
-import { createMapyCzUrl } from "./utils";
+import { createMapyCzUrl, getCurrentTimestamp } from "./utils";
 
 export function processUlovdomovData(data: any) {
   const offers = data.data.offers;
   const postings: Posting[] = offers.map((offer: any): Posting => {
-    const posting = {
+    const posting: Posting = {
       id: offer.id,
+      timestamp: getCurrentTimestamp(),
       postingUrl: `https://www.ulovdomov.cz/inzerat/${offer.seo}/${offer.id}`,
       imageUrl: offer.photos[0]?.path ?? undefined,
       mapyczUrl: offer.geoCoordinates
@@ -23,6 +24,7 @@ export function processBezrealitkyData(data: any) {
   const postings: Posting[] = offers.map((offer: any): Posting => {
     return {
       id: offer.id,
+      timestamp: getCurrentTimestamp(),
       postingUrl: `https://www.bezrealitky.cz/nemovitosti-byty-domy/${offer.id}`,
     };
   });
